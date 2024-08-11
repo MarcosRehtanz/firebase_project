@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:auth_buttons/auth_buttons.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -45,8 +45,8 @@ class _AuthGateState extends State<AuthGate> {
   UserCredential? _credential;
 
   void onSignInWithCredential() async {
-    var userCredential =
-        await FirebaseAuth.instance.signInWithCredential(_credential as AuthCredential );
+    var userCredential = await FirebaseAuth.instance
+        .signInWithCredential(_credential as AuthCredential);
     final user = userCredential.user;
     print(user?.uid);
   }
@@ -60,6 +60,7 @@ class _AuthGateState extends State<AuthGate> {
         });
         print('User is currently signed out!');
       } else {
+        print(user);
         setState(() {
           _logged = 'Signed in!';
         });
@@ -108,7 +109,11 @@ class _AuthGateState extends State<AuthGate> {
       }
     }
   }
-
+  void onSignInWithGoogle() async {
+    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+    var credential = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+    credential;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,6 +125,10 @@ class _AuthGateState extends State<AuthGate> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              GoogleAuthButton(
+                onPressed: (){
+                  onSignInWithGoogle();
+                }),
               const Text(
                 'You have pushed the button this many times:',
               ),
